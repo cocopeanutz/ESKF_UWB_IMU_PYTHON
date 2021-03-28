@@ -1,0 +1,65 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+from functools import partial
+import time
+import GS_timing as accurateClock
+
+class DataGui:
+    def __init__(self):
+        self.fig = plt.figure()
+
+        self.ax = self.fig.gca(projection='3d')
+        self.ax.set(xlim=(-4,4), ylim=(-4,4))
+        self.ax.set_zlim(-4, 4)
+
+        theta = np.linspace(-4 * np.pi, 4 * np.pi, 100)
+
+        self.z = np.linspace(-2, 2, 100)
+        self.r = self.z**2 + 1
+        self.x = self.r * np.sin(theta)
+        self.y = self.r * np.cos(theta)
+        self.line, = self.ax.plot(self.x, np.sin(self.x), animated=True)
+        self.line.set_3d_properties(self.z)
+
+        self.line.set_data((self.x, self.y))
+        self.line.set_3d_properties(self.z)
+
+        self.ax.legend()
+
+        plt.ion()
+        plt.show(block=False)
+
+
+
+
+
+    def insertPointTry(self, i):
+
+        theta = np.linspace(-4 * np.pi, 4 * np.pi, 100) + i/100
+
+        self.z = np.linspace(-2, 2, 100)
+        r = self.z**2 + 1
+        self.x = r * np.sin(theta)
+        self.y = r * np.cos(theta)
+        # print(z)
+        self.line.set_data((x[0:i], y[0:i]))
+        self.line.set_3d_properties(z[0:i])
+        plt.draw()
+        self.fig.canvas.flush_events() # flush the GUI events
+
+    def trialCheckHowMuchTime(self):
+        theta = np.linspace(-4 * np.pi, 4 * np.pi, 1000)
+        self.z = np.linspace(-2, 2, 1000)
+        self.r = self.z**2 + 1
+        self.x = self.r * np.sin(theta)
+        self.y = self.r * np.cos(theta)
+        startTime = accurateClock.millis()
+
+        self.line.set_data((self.x, self.y))
+        self.line.set_3d_properties(self.z)
+        self.ax.draw_artist(self.line)
+        self.fig.canvas.blit(self.fig.bbox)
+        self.fig.canvas.flush_events() # flush the GUI events
+        endTime = accurateClock.millis()
+        print(endTime - startTime)
